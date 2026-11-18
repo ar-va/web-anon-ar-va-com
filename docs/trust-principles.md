@@ -53,7 +53,7 @@ The pattern: trust collapses when people discover a gap between what an anonymou
 
 ## Principles and where they show on the page
 
-1. **A real person, in their own words** (benevolence). Artur's name, a way to reach him (Telegram) and one promise next to the headline (no photo, his choice): "I read
+1. **A real person, in their own words** (benevolence). Artur's photo and one promise next to the headline: "I read
    every message myself. I can't see who wrote it, and I won't try to find out."
 2. **Concrete receipt, said once** (avoid over-reassurance). Three lines near the form: what reaches me (your words and
    the date), what doesn't (name, email, account, IP), and how to check. Details live in the FAQ, folded.

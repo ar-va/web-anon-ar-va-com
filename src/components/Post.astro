@@ -9,7 +9,7 @@ import { REPLY_MAX, ago, day, linkify, plural } from '../lib/core';
 interface Props {
   message: Message;
   mode: 'public' | 'owner' | 'admin';
-  answerer: { name: string };
+  answerer: { name: string; photo: string | null };
   /** Admin forms come back here after posting. */
   back?: string;
   /** Unread when the inbox was opened (admin). */
@@ -111,7 +111,9 @@ const primary = 'shrink-0 bg-blue-violet-600 dark:bg-blue-violet-400 text-white 
         <ul class="flex flex-col gap-4" id={`answers-${m.id}`}>
           {m.replies.map((r) => (
             <li id={`r-${r.id}`} class="flex gap-3" data-reply>
-              <span class="w-8 h-8 rounded-full bg-(--on-bg) text-(--on-text) text-xs font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>
+              {answerer.photo
+                ? <img src={answerer.photo} alt="" width="32" height="32" loading="lazy" referrerpolicy="no-referrer" class="w-8 h-8 rounded-full object-cover shrink-0" />
+                : <span class="w-8 h-8 rounded-full bg-(--on-bg) text-(--on-text) text-xs font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>}
               <div class="min-w-0 flex-1">
                 <p class="text-sm flex flex-wrap items-baseline gap-x-2">
                   <span class="font-medium text-zinc-900 dark:text-white">{answerer.name}</span>
@@ -151,7 +153,9 @@ const primary = 'shrink-0 bg-blue-violet-600 dark:bg-blue-violet-400 text-white 
       {admin && (
         <form method="post" action="/admin" class:list={['flex items-end gap-2.5', { 'mt-4': m.replies.length > 0 }]}>
           <input type="hidden" name="action" value="reply" /><input type="hidden" name="id" value={m.id} /><input type="hidden" name="back" value={`${back}#m-${m.id}`} />
-          <span class="w-8 h-8 mb-1.5 rounded-full bg-(--on-bg) text-(--on-text) text-xs font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>
+          {answerer.photo
+            ? <img src={answerer.photo} alt="" width="32" height="32" referrerpolicy="no-referrer" class="w-8 h-8 mb-1.5 rounded-full object-cover shrink-0" />
+            : <span class="w-8 h-8 mb-1.5 rounded-full bg-(--on-bg) text-(--on-text) text-xs font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>}
           <textarea name="body" rows="1" required maxlength={REPLY_MAX} aria-label="Write an answer"
             placeholder={published ? 'Answer publicly…' : m.wants_public ? 'Answer (public once you publish)…' : 'Answer privately…'}
             class={`${field} min-w-0 flex-1`}></textarea>
