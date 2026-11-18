@@ -10,27 +10,25 @@ import { now, sha256 } from './core';
 
 const SESSION_COOKIE = '__Secure-session';
 
-export interface Admin { id: number; name: string; photo: string | null }
+export interface Admin { id: number; name: string }
 
 export async function currentAdmin(cookies: AstroCookies): Promise<Admin | null> {
   const token = cookies.get(SESSION_COOKIE)?.value;
   const adminId = Number(env.ADMIN_TELEGRAM_ID) || 0;
   if (!token || !adminId) return null;
-  const row = await env.AUTH.prepare('SELECT users.id, users.name, users.photo_url FROM sessions JOIN users ON users.id = sessions.user_id WHERE sessions.id = ? AND sessions.expires_at > ? AND users.id = ?')
-    .bind(await sha256(token), now(), adminId).first<{ id: number; name: string; photo_url: string | null }>()
+  const row = await env.AUTH.prepare('SELECT users.id, users.name FROM sessions JOIN users ON users.id = sessions.user_id WHERE sessions.id = ? AND sessions.expires_at > ? AND users.id = ?')
+    .bind(await sha256(token), now(), adminId).first<{ id: number; name: string }>()
     .catch(() => null);
-  return row ? { id: row.id, name: row.name.split(' ')[0], photo: safePhoto(row.photo_url) } : null;
+  return row ? { id: row.id, name: row.name.split(' ')[0] } : null;
 }
 
-const safePhoto = (url: string | null) => (url?.startsWith('https://') ? url : null);
-
-let face: Promise<{ name: string; photo: string | null }> | null = null;
-/** Who answers on the page: the admin's first name and Telegram photo, read once per Worker instance. */
+let face: Promise<{ name: string }> | null = null;
+/** Who answers on the page: the admin's first name, read once per Worker instance. No photo (user, 2026-11-17). */
 export function answerer() {
-  face ??= env.AUTH.prepare('SELECT name, photo_url FROM users WHERE id = ?').bind(Number(env.ADMIN_TELEGRAM_ID) || 0)
-    .first<{ name: string; photo_url: string | null }>()
-    .then((r) => ({ name: r?.name.split(' ')[0] || 'Artur', photo: safePhoto(r?.photo_url ?? null) }))
-    .catch(() => { face = null; return { name: 'Artur', photo: null }; });
+  face ??= env.AUTH.prepare('SELECT name FROM users WHERE id = ?').bind(Number(env.ADMIN_TELEGRAM_ID) || 0)
+    .first<{ name: string }>()
+    .then((r) => ({ name: r?.name.split(' ')[0] || 'Artur' }))
+    .catch(() => { face = null; return { name: 'Artur' }; });
   return face;
 }
 

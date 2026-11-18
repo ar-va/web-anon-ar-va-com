@@ -107,11 +107,9 @@ const faq = [
         Kind or critical, both are welcome.
       </p>
 
-      <!-- A real person on the other end, and a promise in their own words. -->
+      <!-- A real person on the other end (named, no photo: user, 2026-11-17), and a promise in their own words. -->
       <figure class="mt-7 flex gap-3.5 items-start max-w-md">
-        {answerer.photo
-          ? <img src={answerer.photo} alt="" width="44" height="44" referrerpolicy="no-referrer" class="w-11 h-11 rounded-full object-cover shrink-0" />
-          : <span class="w-11 h-11 rounded-full bg-(--on-bg) text-(--on-text) font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>}
+        <span class="w-11 h-11 rounded-full bg-(--on-bg) text-(--on-text) font-semibold grid place-items-center shrink-0" aria-hidden="true">{answerer.name.charAt(0)}</span>
         <div>
           <blockquote class="text-zinc-800 dark:text-zinc-200 leading-relaxed text-pretty">“I read every message myself. I can’t see who wrote it, and I won’t try to find out.”</blockquote>
           <figcaption class="mt-1 text-sm text-zinc-500">{answerer.name}, who you’re writing to · <a href="https://t.me/artuo" class="hover:text-blue-violet-600 dark:hover:text-blue-violet-400 transition-colors">Telegram</a></figcaption>
